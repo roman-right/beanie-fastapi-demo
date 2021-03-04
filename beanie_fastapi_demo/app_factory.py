@@ -1,6 +1,6 @@
 import motor
+from beanie.general import init_beanie
 from fastapi import FastAPI
-from beanie import Collection
 from pydantic import BaseSettings
 
 from models import Note
@@ -22,12 +22,13 @@ class Settings(BaseSettings):
 
 @app.on_event("startup")
 async def app_init():
+    # CREATE MOTOR CLIENT
     client = motor.motor_asyncio.AsyncIOMotorClient(
         Settings().mongo_dsn, serverSelectionTimeoutMS=100
     )
-    db = client.beanie_db
-    Collection(
-        name="notes", db=db, document_model=Note
-    )
 
+    # INIT BEANIE
+    init_beanie(client.beanie_db, document_models=[Note])
+
+    # ADD ROUTES
     app.include_router(notes_router, prefix="/v1", tags=["notes"])

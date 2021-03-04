@@ -25,3 +25,12 @@ class Note(Document):
 class AggregationResponseItem(BaseModel):
     id: str = Field(None, alias="_id")
     total: int
+
+
+class Statuses(str, Enum):
+    DELETED = "DELETED"
+
+
+class StatusModel(BaseModel):
+    status: Statuses
+
