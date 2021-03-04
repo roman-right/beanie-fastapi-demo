@@ -6,7 +6,7 @@ from pydantic import BaseSettings
 from models import Note
 from routes import notes_router
 
-app = FastAPI(redoc_url="/users/redoc", openapi_url="/users/openapi.json")
+app = FastAPI()
 
 
 class Settings(BaseSettings):
