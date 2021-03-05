@@ -376,14 +376,16 @@ In all the examples before aggregation, the result of the `Note` methods were `N
 
 # Conclusion
 
+Well, the service is ready. I showed how simple it is to make things with Beanie. You can stop thinking about parsing and validating the database data and just focus on your project. For sure I didn't use all the possible features. The whole list of the methods you can find in the project description [here](https://github.com/roman-right/beanie)
+
 Beanie is a really important thing in my development toolset now. Especially if we are talking about the prototype building. And I'm happy to share it with the community. I continue to use it in my projects - it means I'll develop it further. The next big thing I want to implement is the structure and data migrations.
 
-If you will decide to join the development - I will be more than happy :-) 
+You are always welcome to join the development :-) 
 Thank you for your time!
 
 GitHub and PyPI project links:
-https://github.com/roman-right/beanie
-https://pypi.org/project/beanie/
+- https://github.com/roman-right/beanie
+- https://pypi.org/project/beanie/
 
 Demo project from this article:
-https://github.com/roman-right/beanie-fastapi-demo
+- https://github.com/roman-right/beanie-fastapi-demo
