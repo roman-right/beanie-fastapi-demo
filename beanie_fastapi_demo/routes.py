@@ -55,7 +55,7 @@ async def filter_notes_by_tag(tag_name: str):
 # AGGREGATIONS
 
 @notes_router.get("/notes/aggregate/by_tag_name", response_model=List[AggregationResponseItem])
-async def filter_notes_by_tag():
+async def filter_notes_by_tag_name():
     return await Note.aggregate(
         aggregation_query=[
             {"$unwind": "$tag_list"},
@@ -66,7 +66,7 @@ async def filter_notes_by_tag():
 
 
 @notes_router.get("/notes/aggregate/by_tag_color", response_model=List[AggregationResponseItem])
-async def filter_notes_by_tag():
+async def filter_notes_by_tag_color():
     return await Note.aggregate(
         aggregation_query=[
             {"$unwind": "$tag_list"},
