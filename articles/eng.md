@@ -1,9 +1,9 @@
 I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - micro ORM for MongoDB!
 
 
-The main Beanie component is Pydantic - a popular library for data parsing and validation. It helps to implement the main feature - data structuredness. Beanie Document - is an abstraction over the Pydantic BaseModel, which allows working with python objects on the application level and JSON objects on the database level. In general case one MongoDB collection is associated with only one Beanie Document. This is appending predictability in work with the database, and, at the same time, it keeps the whole flexibility of the MongoDB documents - it is possible to represent any data structure with Pydantic model (or even a group of structures with Optional and Union annotations).
+The main Beanie component is [Pydantic](https://pydantic-docs.helpmanual.io/) - a popular library for data parsing and validation. It helps to implement the main feature - data structuredness. Beanie Document - is an abstraction over the Pydantic BaseModel, which allows working with python objects on the application level and JSON objects on the database level. In general case one MongoDB collection is associated with only one Beanie Document. This is appending predictability in work with the database, and, at the same time, it keeps the whole flexibility of the MongoDB documents - it is possible to represent any data structure with Pydantic model (or even a group of structures with Optional and Union annotations).
 
-I make quite a bit of pet-projects: experiments with the new technologies and proofs of concepts. For these purposes, I needed a tool to work with the database, which I could start using right out of the box. And with which I could frequently change the data structure, add and drop elements here and there. This is how Beanie was born.
+I make quite a bit of pet-projects: experiments with the new technologies and proofs of concepts. For these purposes, I needed a tool to work with the database, which I could start using right out of the box without a long setup. And with which I could frequently change the data structure, add and drop elements here and there. This is how Beanie was born.
 
 # Example
 
@@ -54,7 +54,7 @@ class Note(Document):  # This is our ORM Document structure
     tag_list: List[Tag] = []
 ```
 
-A note consists of the required title, optional text, and a list of tags. Each tag has a name and color. All this, as you can see, quite simple implemented on the Beanie document `Note` creation with type annotations (Pydantic-way).
+A note consists of the required title, optional text, and a list of tags. Each tag has a name and color. Class `Note` has this all implemented in a Pydantic way.
 
 Now I will create the database connection and Beanie initialization:
 
