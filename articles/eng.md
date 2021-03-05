@@ -331,7 +331,7 @@ Output:
 
 ### Aggregations
 
-And fially I want to show, how to make aggragations with Beanie. In this example I'll calculate how many notes I have per tag name.
+And finally, I want to show, how to make aggregations with Beanie. In this example, I'll calculate how many notes I have per tag name.
 
 ```python
 class AggregationResponseItem(BaseModel):
