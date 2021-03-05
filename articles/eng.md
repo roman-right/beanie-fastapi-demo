@@ -115,7 +115,7 @@ async def create_note(note: Note):
 ```
 
 <details>
-  <summary>Request example:</summary>
+  <summary>Click to see request details</summary>
   
 POST `localhost:10001/v1/notes`
   
@@ -123,8 +123,8 @@ Input:
   
 ```json
 {
-  "title": "Test title 2",
-  "text": "test text"
+    "title": "Monday",
+    "text": "Is the best day ever!"
 }
 ```
 
@@ -132,9 +132,9 @@ Output:
 
 ```json
 {
-    "_id": "6041fc953765e1290b819f3d",
-    "title": "Test title 2",
-    "text": "test text",
+    "_id": "60425951ded355386e0666ed",
+    "title": "Monday",
+    "text": "Is the best day ever!",
     "tag_list": []
 }
 ```
@@ -162,6 +162,24 @@ async def get_note_by_id(note: Note = Depends(get_note)):
     return note
 ```
 
+<details>
+  <summary>Click to see request details</summary>
+  
+GET `localhost:10001/v1/notes/60425951ded355386e0666ed` 
+
+Output:
+
+```json
+{
+    "_id": "60425951ded355386e0666ed",
+    "title": "Monday",
+    "text": "Is the best day ever!",
+    "tag_list": []
+}
+```
+  
+</details>
+
 ### Update
 
 The application already can create and read the notes, but still can not do anything with tags. This is what I'll do next:
@@ -172,6 +190,38 @@ async def add_tag(tag: Tag, note: Note = Depends(get_note)):
     await note.update(update_query={"$push": {"tag_list": tag.dict()}})
     return note
 ```
+
+<details>
+  <summary>Click to see request details</summary>
+  
+PUT `localhost:10001/v1/notes/60425951ded355386e0666ed/add_tag`
+  
+Input:
+  
+```json
+{
+    "name": "false",
+    "color": "RED"
+}
+```
+
+Output:
+
+```json
+{
+    "_id": "60425951ded355386e0666ed",
+    "title": "Monday",
+    "text": "Is the best day ever!",
+    "tag_list": [
+        {
+            "name": "false",
+            "color": "RED"
+        }
+    ]
+}
+```
+  
+</details>
 
 There are two main types of the Beanie Document update: 
 replace - full document update
@@ -189,6 +239,22 @@ async def get_note_by_id(note: Note = Depends(get_note)):
     return StatusModel(status=Statuses.DELETED)
 ```
 
+<details>
+  <summary>Click to see request details</summary>
+  
+DELETE `localhost:10001/v1/notes/60425951ded355386e0666ed`
+  
+
+Output:
+
+```json
+{
+    "status": "DELETED"
+}
+```
+  
+</details>
+
 ### Lists
 
 CRUD is done, but no one service can avoid lists endpoints. The implementation of this is simple too:
@@ -203,6 +269,63 @@ async def get_all_notes():
 async def filter_notes_by_tag(tag_name: str):
     return await Note.find_many({"tag_list.name": tag_name}).to_list()
 ```
+
+<details>
+  <summary>Click to see request details</summary>
+  
+GET `localhost:10001/v1/notes`
+  
+Output:
+
+```json
+[
+  {
+    "_id": "60425ac0ded355386e0666ee",
+    "title": "Monday",
+    "text": "Is the best day ever!",
+    "tag_list": [
+      {
+        "name": "false",
+        "color": "RED"
+      }
+    ]
+  },
+  {
+    "_id": "60425adeded355386e0666ef",
+    "title": "Monday",
+    "text": "Is, probably, not the best day ever..",
+    "tag_list": [
+      {
+        "name": "true",
+        "color": "GREEN"
+      }
+    ]
+  }
+]
+```
+
+GET `localhost:10001/v1/notes/by_tag/true`
+  
+Output:
+
+```json
+[
+  {
+    "_id": "60425adeded355386e0666ef",
+    "title": "Monday",
+    "text": "Is, probably, not the best day ever..",
+    "tag_list": [
+      {
+        "name": "true",
+        "color": "GREEN"
+      }
+    ]
+  }
+]
+```
+
+  
+</details>
 
 `find_all` method tells everything about self just with the name. `find_many` is simple too. It uses PyMongo's query as the argument to filter the documents.
 
@@ -226,6 +349,28 @@ async def filter_notes_by_tag_name():
         item_model=AggregationResponseItem
     ).to_list()
 ```
+
+<details>
+  <summary>Click to see request details</summary>
+  
+GET `localhost:10001/v1/notes/aggregate/by_tag_name`
+  
+Output:
+
+```json
+[
+    {
+        "_id": "false",
+        "total": 1
+    },
+    {
+        "_id": "true",
+        "total": 1
+    }
+]
+```
+
+</details>
 
 In all the examples before aggregation, the result of the `Note` methods were `Note` objects or lists of the `Note` objects. But in the aggregation case, the result can have any structure. To continue work with the python objects I provide parameter `item_model=AggregationResponseItem` to the `aggregate` method and it returns a list of the `AggregationResponseItem` objects. 
 
