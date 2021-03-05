@@ -1,4 +1,4 @@
-I'm excited to introduce Beanie - micro ORM for MongoDB!
+I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - micro ORM for MongoDB!
 
 
 The main Beanie component is Pydantic - a popular library for data parsing and validation. It helps to implement the main feature - data structuredness. Beanie Document - is an abstraction over the Pydantic BaseModel, which allows working with python objects on the application level and JSON objects on the database level. In general case one MongoDB collection is associated with only one Beanie Document. This is appending predictability in work with the database, and, at the same time, it keeps the whole flexibility of the MongoDB documents - it is possible to represent any data structure with Pydantic model (or even a group of structures with Optional and Union annotations).
