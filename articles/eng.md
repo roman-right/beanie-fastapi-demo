@@ -4,7 +4,7 @@ The main component of Beanie is [Pydantic](https://pydantic-docs.helpmanual.io/)
 
 I'm doing quite a few pet projects: Experiments with the new technologies and Proofs of Concepts. For these purposes, I needed a tool for working with the database that I can use immediately without a long setup. And with which I could change the data structure frequently, adding and dropping elements here and there. This is how Beanie was born.
 
-# Example
+# Usage
 
 But that's a bit boring, isn't it? Now let's get to the interesting part - the usage examples. It will show how handy this tool is. I'm deliberately omitting some additional imports and helpers here, so as not to overload the picture and focus only on the important things. The entire working app from this article is in my GitHub repo beanie-fastapi-demo.
 
