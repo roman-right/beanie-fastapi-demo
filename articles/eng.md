@@ -60,13 +60,13 @@ import motor.motor_asyncio
 from beanie.general import init_beanie
 
 
-# CREATE MOTOR CLIENT
+# Create Motor client
 client = motor.motor_asyncio.AsyncIOMotorClient(
     f"mongodb://user:pass@host:27017/beanie_db",
     serverSelectionTimeoutMS=100
 )
 
-# INIT BEANIE
+# Init Beanie
 init_beanie(client.beanie_db, document_models=[Note])
 ```
 
@@ -148,15 +148,16 @@ In the response, it returns `_id` - the unique id of the document in the databas
 ```python
 from beanie.fields import PydanticObjectId
 
-
+# Helper method to get instances
 async def get_note(note_id: PydanticObjectId) -> Note:
-    note = await Note.get(note_id)
+    note = await Note.get(note_id) # Note retrieving
     if note is None:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
 
+# Actual endpoint
 @notes_router.get("/notes/{note_id}", response_model=Note)
-async def get_note_by_id(note: Note = Depends(get_note)):
+async def get_note_by_id(note: Note = Depends(get_note)): # Helper usage with Depends annotation
     return note
 ```
 
