@@ -108,7 +108,10 @@ notes_router = APIRouter()
 
 @notes_router.post("/notes/", response_model=Note)
 async def create_note(note: Note):
+    
+    # Note creation
     await note.create()
+    
     return note
 ```
 
@@ -150,7 +153,10 @@ from beanie.fields import PydanticObjectId
 
 # Helper method to get instances
 async def get_note(note_id: PydanticObjectId) -> Note:
-    note = await Note.get(note_id) # Note retrieving
+    
+    # Note retrieval
+    note = await Note.get(note_id)
+    
     if note is None:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
@@ -186,7 +192,10 @@ The application can already create and read the notes, but it can't do anything 
 ```python
 @notes_router.put("/notes/{note_id}/add_tag", response_model=Note)
 async def add_tag(tag: Tag, note: Note = Depends(get_note)):
+    
+    # Update the note
     await note.update(update_query={"$push": {"tag_list": tag.dict()}})
+    
     return note
 ```
 
@@ -235,7 +244,10 @@ The delete operation is not that interesting to talk much about:
 ```python
 @notes_router.delete("/notes/{note_id}", response_model=StatusModel)
 async def get_note_by_id(note: Note = Depends(get_note)):
+    
+    # Delete the note
     await note.delete()
+    
     return StatusModel(status=Statuses.DELETED)
 ```
 
@@ -262,11 +274,15 @@ CRUD is done, but no service gets around list endpoints. The implementation is s
 ```python
 @notes_router.get("/notes/", response_model=List[Note])
 async def get_all_notes():
+    
+    # Get all notes
     return await Note.find_all().to_list()
 
 
 @notes_router.get("/notes/by_tag/{tag_name}", response_model=List[Note])
 async def filter_notes_by_tag(tag_name: str):
+    
+    # Filter notes
     return await Note.find_many({"tag_list.name": tag_name}).to_list()
 ```
 
@@ -341,6 +357,8 @@ class AggregationResponseItem(BaseModel):
 
 @notes_router.get("/notes/aggregate/by_tag_name", response_model=List[AggregationResponseItem])
 async def filter_notes_by_tag_name():
+    
+    # Notes aggregation
     return await Note.aggregate(
         aggregation_query=[
             {"$unwind": "$tag_list"},
