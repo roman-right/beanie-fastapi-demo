@@ -1,6 +1,6 @@
 I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - micro ORM for MongoDB!
 
-The main component of Beanie is [Pydantic](https://pydantic-docs.helpmanual.io/) - a popular library for data parsing and validation. It helps to implement the main feature - data structuring. Beanie Document - is an abstraction over the Pydantic BaseModel that allows working with Python objects at the application level and JSON objects at the database level. In the general case, one MongoDB collection is associated with one Beanie Document. This brings predictability when working with the database, and at the same time preserves all the flexibility of MongoDB documents - it is possible to represent any data structure with the Pydantic model (or even a group of structures with Optional and Union annotations).
+The main component of Beanie is [Pydantic](https://pydantic-docs.helpmanual.io/) - a popular library for data parsing and validation. It helps to implement the main feature - data structuring. Beanie `Document` - is an abstraction over the Pydantic `BaseModel` that allows working with Python objects at the application level and JSON objects at the database level. In the general case, one MongoDB collection is associated with one Beanie `Document`. This brings predictability when working with the database, and at the same time preserves all the flexibility of MongoDB documents - it is possible to represent any data structure with the Pydantic model (or even a group of structures with Optional and Union annotations).
 
 I'm doing quite a few pet projects: Experiments with the new technologies and Proofs of Concepts. For these purposes, I needed a tool for working with the database that I can use immediately without a long setup. And with which I could change the data structure frequently, adding and dropping elements here and there. This is how Beanie was born.
 
@@ -96,7 +96,7 @@ await note.create()
 
 ### Create
 
-The `create` method stores the document in the database. Also, Beanie allows document insertion in a few other ways, including batch insert. Examples of usage can be found in the Document method descriptions by the [link](https://github.com/roman-right/beanie)
+The `create` method stores the document in the database. Also, Beanie allows document insertion in a few other ways, including batch insert. Examples of usage can be found in the `Document` method descriptions by the [link](https://github.com/roman-right/beanie)
 
 Now I'll demonstrate the same trick, but this time with the endpoint:
 
@@ -142,7 +142,7 @@ Output:
   
 </details>
 
-FastAPI uses Pydantic models to parse the request body. This means that I can use Beanie Document as the model and then work with the already parsed document. To insert it into the database, I use the `create` method again.
+FastAPI uses Pydantic models to parse the request body. This means that I can use Beanie `Document` as the model and then work with the already parsed document. To insert it into the database, I use the `create` method again.
 
 ### Read
 
@@ -231,7 +231,7 @@ Output:
   
 </details>
 
-There are two main types of Beanie Document update: 
+There are two main types of Beanie `Document` update: 
 - replace - full update of the document
 - update - partial update of the document
 
