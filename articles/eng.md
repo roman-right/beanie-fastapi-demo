@@ -51,14 +51,13 @@ class Note(Document):  # This is the document structure
     tag_list: List[Tag] = []
 ```
 
-A note consists of the required title, optional text, and a list of tags. Each tag has a name and a color. The class 'Note' has implemented all this in a pydantic way.
+A note consists of the required title, optional text, and a list of tags. Each tag has a name and a color. The class `Note` has implemented all this in a pydantic way.
 
 Now I will create the database connection and Beanie initialization:
 
 ```python
 import motor.motor_asyncio
 from beanie.general import init_beanie
-
 
 # Create Motor client
 client = motor.motor_asyncio.AsyncIOMotorClient(
@@ -70,8 +69,7 @@ client = motor.motor_asyncio.AsyncIOMotorClient(
 init_beanie(client.beanie_db, document_models=[Note])
 ```
 
-No surprises here. 
-Beanie uses Motor as an asynchronous driver for MongoDB. For initialization, I need to provide the list of all Beanie documents that I will be working with.
+No surprises here. Beanie uses Motor as an asynchronous driver for MongoDB. For initialization, I need to provide the list of all Beanie documents that I will be working with.
 
 ## Web application
 
@@ -80,12 +78,11 @@ As API framework I will use the popular FastApi.
 ```python
 from fastapi import FastAPI
 
-
 app = FastAPI()
 app.include_router(notes_router, prefix="/v1", tags=["notes"])
 ```
 
-I will first implement a simple CRUD to show the basics of Beanie 
+I will first implement a simple CRUD to show the basics of Beanie
 
 ### Create
 
@@ -108,23 +105,22 @@ notes_router = APIRouter()
 
 @notes_router.post("/notes/", response_model=Note)
 async def create_note(note: Note):
-    
     # Note creation
     await note.create()
-    
+
     return note
 ```
 
 {% details Click to see request details %}
-  
+
 POST `localhost:10001/v1/notes`
-  
+
 Input:
-  
+
 ```json
 {
-    "title": "Monday",
-    "text": "Is the best day ever!"
+  "title": "Monday",
+  "text": "Is the best day ever!"
 }
 ```
 
@@ -132,13 +128,13 @@ Output:
 
 ```json
 {
-    "_id": "60425951ded355386e0666ed",
-    "title": "Monday",
-    "text": "Is the best day ever!",
-    "tag_list": []
+  "_id": "60425951ded355386e0666ed",
+  "title": "Monday",
+  "text": "Is the best day ever!",
+  "tag_list": []
 }
 ```
-  
+
 {% enddetails %}
 
 FastAPI uses Pydantic models to parse the request body. This means that I can use Beanie `Document` as the model and then work with the already parsed document. To insert it into the database, I use the `create` method again.
@@ -158,37 +154,44 @@ note = await Note.get(note_id)
 ```python
 from beanie.fields import PydanticObjectId
 
+
 # Helper method to get instances
 async def get_note(note_id: PydanticObjectId) -> Note:
-    
     # Note retrieval
     note = await Note.get(note_id)
-    
+
     if note is None:
-        raise HTTPException(status_code=404, detail="Note not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Note not found"
+        )
     return note
+
 
 # Actual endpoint
 @notes_router.get("/notes/{note_id}", response_model=Note)
-async def get_note_by_id(note: Note = Depends(get_note)): # Helper usage with Depends annotation
+async def get_note_by_id(
+        # Helper usage with Depends annotation
+        note: Note = Depends(get_note)
+):
     return note
 ```
 
 {% details Click to see request details %}
-  
-GET `localhost:10001/v1/notes/60425951ded355386e0666ed` 
+
+GET `localhost:10001/v1/notes/60425951ded355386e0666ed`
 
 Output:
 
 ```json
 {
-    "_id": "60425951ded355386e0666ed",
-    "title": "Monday",
-    "text": "Is the best day ever!",
-    "tag_list": []
+  "_id": "60425951ded355386e0666ed",
+  "title": "Monday",
+  "text": "Is the best day ever!",
+  "tag_list": []
 }
 ```
-  
+
 {% enddetails %}
 
 ### Update
@@ -199,7 +202,9 @@ The application can already create and read the notes, but it can't do anything 
 
 ```python
 tag = Tag(name="false", color="RED")
-await note.update(update_query={"$push": {"tag_list": tag.dict()}})
+await note.update(
+    update_query={"$push": {"tag_list": tag.dict()}}
+)
 ```
 
 **Inside the endpoint:**
@@ -207,23 +212,24 @@ await note.update(update_query={"$push": {"tag_list": tag.dict()}})
 ```python
 @notes_router.put("/notes/{note_id}/add_tag", response_model=Note)
 async def add_tag(tag: Tag, note: Note = Depends(get_note)):
-    
     # Update the note
-    await note.update(update_query={"$push": {"tag_list": tag.dict()}})
-    
+    await note.update(
+        update_query={"$push": {"tag_list": tag.dict()}}
+    )
+
     return note
 ```
 
 {% details Click to see request details %}
-  
+
 PUT `localhost:10001/v1/notes/60425951ded355386e0666ed/add_tag`
-  
+
 Input:
-  
+
 ```json
 {
-    "name": "false",
-    "color": "RED"
+  "name": "false",
+  "color": "RED"
 }
 ```
 
@@ -231,21 +237,22 @@ Output:
 
 ```json
 {
-    "_id": "60425951ded355386e0666ed",
-    "title": "Monday",
-    "text": "Is the best day ever!",
-    "tag_list": [
-        {
-            "name": "false",
-            "color": "RED"
-        }
-    ]
+  "_id": "60425951ded355386e0666ed",
+  "title": "Monday",
+  "text": "Is the best day ever!",
+  "tag_list": [
+    {
+      "name": "false",
+      "color": "RED"
+    }
+  ]
 }
 ```
-  
+
 {% enddetails %}
 
-There are two main types of Beanie `Document` update: 
+There are two main types of Beanie `Document` update:
+
 - replace - full update of the document
 - update - partial update of the document
 
@@ -266,26 +273,24 @@ await note.delete()
 ```python
 @notes_router.delete("/notes/{note_id}", response_model=StatusModel)
 async def get_note_by_id(note: Note = Depends(get_note)):
-    
     # Delete the note
     await note.delete()
-    
+
     return StatusModel(status=Statuses.DELETED)
 ```
 
 {% details Click to see request details %}
-  
+
 DELETE `localhost:10001/v1/notes/60425951ded355386e0666ed`
-  
 
 Output:
 
 ```json
 {
-    "status": "DELETED"
+  "status": "DELETED"
 }
 ```
-  
+
 {% enddetails %}
 
 ### Lists
@@ -302,24 +307,30 @@ red_notes = Note.find_many({"tag_list.color": "RED"}).to_list()
 **Inside the endpoint:**
 
 ```python
-@notes_router.get("/notes/", response_model=List[Note])
+@notes_router.get(
+    "/notes/",
+    response_model=List[Note]
+)
 async def get_all_notes():
-    
     # Get all notes
     return await Note.find_all().to_list()
 
 
-@notes_router.get("/notes/by_tag/{tag_name}", response_model=List[Note])
+@notes_router.get(
+    "/notes/by_tag/{tag_name}",
+    response_model=List[Note]
+)
 async def filter_notes_by_tag(tag_name: str):
-    
     # Filter notes
-    return await Note.find_many({"tag_list.name": tag_name}).to_list()
+    return await Note.find_many(
+        {"tag_list.name": tag_name}
+    ).to_list()
 ```
 
 {% details Click to see request details %}
-  
+
 GET `localhost:10001/v1/notes`
-  
+
 Output:
 
 ```json
@@ -350,7 +361,7 @@ Output:
 ```
 
 GET `localhost:10001/v1/notes/by_tag/true`
-  
+
 Output:
 
 ```json
@@ -384,13 +395,17 @@ class AggregationResponseItem(BaseModel):
     id: str = Field(None, alias="_id")
     total: int
 
+
 results = await Note.aggregate(
-        aggregation_query=[
-            {"$unwind": "$tag_list"},
-            {"$group": {"_id": "$tag_list.name", "total": {"$sum": 1}}}
-        ],
-        item_model=AggregationResponseItem
-    ).to_list()
+    aggregation_query=[
+        {"$unwind": "$tag_list"},
+        {"$group": {
+            "_id": "$tag_list.name",
+            "total": {"$sum": 1}
+        }}
+    ],
+    item_model=AggregationResponseItem
+).to_list()
 ```
 
 **Inside the endpoint:**
@@ -398,39 +413,41 @@ results = await Note.aggregate(
 ```python
 @notes_router.get("/notes/aggregate/by_tag_name", response_model=List[AggregationResponseItem])
 async def filter_notes_by_tag_name():
-    
     # Notes aggregation
     return await Note.aggregate(
         aggregation_query=[
             {"$unwind": "$tag_list"},
-            {"$group": {"_id": "$tag_list.name", "total": {"$sum": 1}}}
+            {"$group": {
+                "_id": "$tag_list.name",
+                "total": {"$sum": 1}
+            }}
         ],
         item_model=AggregationResponseItem
     ).to_list()
 ```
 
 {% details Click to see request details %}
-  
+
 GET `localhost:10001/v1/notes/aggregate/by_tag_name`
-  
+
 Output:
 
 ```json
 [
-    {
-        "_id": "false",
-        "total": 1
-    },
-    {
-        "_id": "true",
-        "total": 1
-    }
+  {
+    "_id": "false",
+    "total": 1
+  },
+  {
+    "_id": "true",
+    "total": 1
+  }
 ]
 ```
 
 {% enddetails %}
 
-In all the examples before aggregation, the result of the `Note` methods were `Note` objects or lists of the `Note` objects. But in the aggregation case, the result can have any structure. To continue work with the python objects I provide parameter `item_model=AggregationResponseItem` to the `aggregate` method and it returns a list of the `AggregationResponseItem` objects. 
+In all the examples before aggregation, the result of the `Note` methods were `Note` objects or lists of the `Note`objects. But in the aggregation case, the result can have any structure. To continue work with the python objects I provide parameter `item_model=AggregationResponseItem` to the `aggregate` method and it returns a list of the `AggregationResponseItem` objects.
 
 # Conclusion
 
@@ -442,7 +459,7 @@ You are always welcome to participate in the development :-) Thank you very much
 
 GitHub and PyPI project links:
 
-- https://github.com/roman-right/beanie 
+- https://github.com/roman-right/beanie
 - https://pypi.org/project/beanie/
 
 Demo project from this article:
