@@ -1,4 +1,4 @@
-I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - Python micro ODM for MongoDB!
+I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - Python micro ODM (Object Document Mapper) for MongoDB!
 
 The main component of Beanie is [Pydantic](https://pydantic-docs.helpmanual.io/) - a popular library for data parsing and validation. It helps to implement the main feature - data structuring. Beanie `Document` - is an abstraction over the Pydantic `BaseModel` that allows working with Python objects at the application level and JSON objects at the database level. In the general case, one MongoDB collection is associated with one Beanie `Document`. This brings predictability when working with the database, and at the same time preserves all the flexibility of MongoDB documents - it is possible to represent any data structure with the Pydantic model (or even a group of structures with Optional and Union annotations).
 
