@@ -1,4 +1,4 @@
-I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - micro ORM for MongoDB!
+I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - micro ODM for MongoDB!
 
 The main component of Beanie is [Pydantic](https://pydantic-docs.helpmanual.io/) - a popular library for data parsing and validation. It helps to implement the main feature - data structuring. Beanie `Document` - is an abstraction over the Pydantic `BaseModel` that allows working with Python objects at the application level and JSON objects at the database level. In the general case, one MongoDB collection is associated with one Beanie `Document`. This brings predictability when working with the database, and at the same time preserves all the flexibility of MongoDB documents - it is possible to represent any data structure with the Pydantic model (or even a group of structures with Optional and Union annotations).
 
@@ -45,7 +45,7 @@ class Tag(BaseModel):
     color: TagColors = TagColors.BLUE
 
 
-class Note(Document):  # This is our ORM Document structure
+class Note(Document):  # This is the document structure
     title: str
     text: Optional[str]
     tag_list: List[Tag] = []
@@ -115,8 +115,7 @@ async def create_note(note: Note):
     return note
 ```
 
-<details>
-  <summary>Click to see request details</summary>
+{% details Click to see request details %}
   
 POST `localhost:10001/v1/notes`
   
@@ -140,7 +139,7 @@ Output:
 }
 ```
   
-</details>
+{% enddetails %}
 
 FastAPI uses Pydantic models to parse the request body. This means that I can use Beanie `Document` as the model and then work with the already parsed document. To insert it into the database, I use the `create` method again.
 
@@ -175,8 +174,7 @@ async def get_note_by_id(note: Note = Depends(get_note)): # Helper usage with De
     return note
 ```
 
-<details>
-  <summary>Click to see request details</summary>
+{% details Click to see request details %}
   
 GET `localhost:10001/v1/notes/60425951ded355386e0666ed` 
 
@@ -191,7 +189,7 @@ Output:
 }
 ```
   
-</details>
+{% enddetails %}
 
 ### Update
 
@@ -216,8 +214,7 @@ async def add_tag(tag: Tag, note: Note = Depends(get_note)):
     return note
 ```
 
-<details>
-  <summary>Click to see request details</summary>
+{% details Click to see request details %}
   
 PUT `localhost:10001/v1/notes/60425951ded355386e0666ed/add_tag`
   
@@ -246,7 +243,7 @@ Output:
 }
 ```
   
-</details>
+{% enddetails %}
 
 There are two main types of Beanie `Document` update: 
 - replace - full update of the document
@@ -276,8 +273,7 @@ async def get_note_by_id(note: Note = Depends(get_note)):
     return StatusModel(status=Statuses.DELETED)
 ```
 
-<details>
-  <summary>Click to see request details</summary>
+{% details Click to see request details %}
   
 DELETE `localhost:10001/v1/notes/60425951ded355386e0666ed`
   
@@ -290,7 +286,7 @@ Output:
 }
 ```
   
-</details>
+{% enddetails %}
 
 ### Lists
 
@@ -320,8 +316,7 @@ async def filter_notes_by_tag(tag_name: str):
     return await Note.find_many({"tag_list.name": tag_name}).to_list()
 ```
 
-<details>
-  <summary>Click to see request details</summary>
+{% details Click to see request details %}
   
 GET `localhost:10001/v1/notes`
   
@@ -374,8 +369,7 @@ Output:
 ]
 ```
 
-  
-</details>
+{% enddetails %}
 
 The `find_all` method tells everything about itself by name only. `find_many` is also simple. It takes PyMongo's query as an argument to filter the documents.
 
@@ -415,8 +409,7 @@ async def filter_notes_by_tag_name():
     ).to_list()
 ```
 
-<details>
-  <summary>Click to see request details</summary>
+{% details Click to see request details %}
   
 GET `localhost:10001/v1/notes/aggregate/by_tag_name`
   
@@ -435,7 +428,7 @@ Output:
 ]
 ```
 
-</details>
+{% enddetails %}
 
 In all the examples before aggregation, the result of the `Note` methods were `Note` objects or lists of the `Note` objects. But in the aggregation case, the result can have any structure. To continue work with the python objects I provide parameter `item_model=AggregationResponseItem` to the `aggregate` method and it returns a list of the `AggregationResponseItem` objects. 
 
