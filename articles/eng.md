@@ -12,13 +12,13 @@ As an example, I'll create a small rest-service for managing notes.
 
 ## Installation
 
-```
+```shell
 pip install beanie
 ```
 
 OR
 
-```
+```shell
 poetry add beanie
 ```
 
