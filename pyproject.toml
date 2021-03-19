@@ -7,7 +7,7 @@ authors = ["Roman <roman.korolev@teraki.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = "^0.63.0"
-beanie = "^0.2.0"
+beanie = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

@@ -22,8 +22,8 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "beanie"
-version = "0.2.0"
-description = "MongoDB ORM based on Pydantic and Motor"
+version = "0.3.0"
+description = "MongoDB ODM based on Pydantic and Motor"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
@@ -231,7 +231,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b757edd0afeafcf4c39511dc2ec2db1347e3b5909b6238199f9937c7f69b33db"
+content-hash = "a37e26ab40a6471a42cc52f8a3224fdbdc5fd7d9441e5b16538b61ccae938d92"
 
 [metadata.files]
 atomicwrites = [
@@ -243,8 +243,8 @@ attrs = [
     {file = "attrs-20.3.0.tar.gz", hash = "sha256:832aa3cde19744e49938b91fea06d69ecb9e649c93ba974535d08ad92164f700"},
 ]
 beanie = [
-    {file = "beanie-0.2.0-py3-none-any.whl", hash = "sha256:674cd202664a17a063b3ffec1683cd01a325ee794928583fc568fbde76054003"},
-    {file = "beanie-0.2.0.tar.gz", hash = "sha256:7ea15c91ff07312edeb8a14414abd70d1315f58573c8b920e8cfa47ce6af6904"},
+    {file = "beanie-0.3.0-py3-none-any.whl", hash = "sha256:b880e421a4049e34aa6b4c37002e40ca8e743cda110865a0c282f0e09bba26b7"},
+    {file = "beanie-0.3.0.tar.gz", hash = "sha256:a1b0072e2265ea99d3fcf6c346f6fee205932218c75bdfcbeb6edf28fd347db9"},
 ]
 click = [
     {file = "click-7.1.2-py2.py3-none-any.whl", hash = "sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"},

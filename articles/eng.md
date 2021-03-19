@@ -1,12 +1,24 @@
-I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - Python micro ODM (Object Document Mapper) for MongoDB!
+I'm excited to introduce [Beanie](https://github.com/roman-right/beanie) - Python micro ODM (Object Document Mapper) for
+MongoDB!
 
-The main component of Beanie is [Pydantic](https://pydantic-docs.helpmanual.io/) - a popular library for data parsing and validation. It helps to implement the main feature - data structuring. Beanie `Document` - is an abstraction over the Pydantic `BaseModel` that allows working with Python objects at the application level and JSON objects at the database level. In the general case, one MongoDB collection is associated with one Beanie `Document`. This brings predictability when working with the database, and at the same time preserves all the flexibility of MongoDB documents - it is possible to represent any data structure with the Pydantic model (or even a group of structures with Optional and Union annotations).
+The main component of Beanie is [Pydantic](https://pydantic-docs.helpmanual.io/) - a popular library for data parsing
+and validation. It helps to implement the main feature - data structuring. Beanie `Document` - is an abstraction over
+the Pydantic `BaseModel` that allows working with Python objects at the application level and JSON objects at the
+database level. In the general case, one MongoDB collection is associated with one Beanie `Document`. This brings
+predictability when working with the database, and at the same time preserves all the flexibility of MongoDB documents -
+it is possible to represent any data structure with the Pydantic model (or even a group of structures with Optional and
+Union annotations).
 
-I'm doing quite a few pet projects: Experiments with the new technologies and Proofs of Concepts. For these purposes, I needed a tool for working with the database that I can use immediately without a long setup. And with which I could change the data structure frequently, adding and dropping elements here and there. This is how Beanie was born.
+I'm doing quite a few pet projects: Experiments with the new technologies and Proofs of Concepts. For these purposes, I
+needed a tool for working with the database that I can use immediately without a long setup. And with which I could
+change the data structure frequently, adding and dropping elements here and there. This is how Beanie was born.
 
 # Usage example
 
-But that's a bit boring, isn't it? Now let's get to the interesting part - the usage examples. It will show how handy this tool is. I'm deliberately omitting some additional imports and helpers here, so as not to overload the picture and focus only on the important things. The entire working app from this article is in my GitHub repo [beanie-fastapi-demo](https://github.com/roman-right/beanie-fastapi-demo).
+But that's a bit boring, isn't it? Now let's get to the interesting part - the usage examples. It will show how handy
+this tool is. I'm deliberately omitting some additional imports and helpers here, so as not to overload the picture and
+focus only on the important things. The entire working app from this article is in my GitHub
+repo [beanie-fastapi-demo](https://github.com/roman-right/beanie-fastapi-demo).
 
 As an example, I'll create a small rest-service for managing notes.
 
@@ -51,7 +63,8 @@ class Note(Document):  # This is the document structure
     tag_list: List[Tag] = []
 ```
 
-A note consists of the required title, optional text, and a list of tags. Each tag has a name and a color. The class `Note` has implemented all this in a pydantic way.
+A note consists of the required title, optional text, and a list of tags. Each tag has a name and a color. The
+class `Note` has implemented all this in a pydantic way.
 
 Now I will create the database connection and Beanie initialization:
 
@@ -59,17 +72,21 @@ Now I will create the database connection and Beanie initialization:
 import motor.motor_asyncio
 from beanie.general import init_beanie
 
-# Create Motor client
-client = motor.motor_asyncio.AsyncIOMotorClient(
-    f"mongodb://user:pass@host:27017/beanie_db",
-    serverSelectionTimeoutMS=100
-)
 
-# Init Beanie
-init_beanie(client.beanie_db, document_models=[Note])
+async def main():
+    # Create Motor client
+    client = motor.motor_asyncio.AsyncIOMotorClient(
+        f"mongodb://user:pass@host:27017/beanie_db",
+        serverSelectionTimeoutMS=100
+    )
+
+    # Init Beanie
+    await init_beanie(client.beanie_db, document_models=[Note])
+
 ```
 
-No surprises here. Beanie uses Motor as an asynchronous driver for MongoDB. For initialization, I need to provide the list of all Beanie documents that I will be working with.
+No surprises here. Beanie uses Motor as an asynchronous driver for MongoDB. For initialization, I need to provide the
+list of all Beanie documents that I will be working with.
 
 ## Web application
 
@@ -93,7 +110,9 @@ note = Note(title="Monday", text="What a nice day!")
 await note.create()
 ```
 
-The `create` method stores the document in the database. Also, Beanie allows document insertion in a few other ways, including batch insert. Examples of usage can be found in the `Document` method descriptions by the [link](https://github.com/roman-right/beanie)
+The `create` method stores the document in the database. Also, Beanie allows document insertion in a few other ways,
+including batch insert. Examples of usage can be found in the `Document` method descriptions by
+the [link](https://github.com/roman-right/beanie)
 
 Now I'll demonstrate the same trick, but this time inside the endpoint:
 
@@ -137,11 +156,13 @@ Output:
 
 {% enddetails %}
 
-FastAPI uses Pydantic models to parse the request body. This means that I can use Beanie `Document` as the model and then work with the already parsed document. To insert it into the database, I use the `create` method again.
+FastAPI uses Pydantic models to parse the request body. This means that I can use Beanie `Document` as the model and
+then work with the already parsed document. To insert it into the database, I use the `create` method again.
 
 ### Read
 
-In the response, it returns `_id` - the unique id of the document in the database. Now I'll show how to retrieve the note based on its id.
+In the response, it returns `_id` - the unique id of the document in the database. Now I'll show how to retrieve the
+note based on its id.
 
 **Independent implementation:**
 
@@ -196,7 +217,8 @@ Output:
 
 ### Update
 
-The application can already create and read the notes, but it can't do anything with the tags yet. That's what I'm going to do next.
+The application can already create and read the notes, but it can't do anything with the tags yet. That's what I'm going
+to do next.
 
 **Independent implementation:**
 
@@ -256,7 +278,10 @@ There are two main types of Beanie `Document` update:
 - replace - full update of the document
 - update - partial update of the document
 
-Replace is useful in many cases, but in the current one, I don't know if the `Note` document is in the actual state now. Some tags might have been added after the last synchronization with the database. If I replace the document with new data, I can easily lose some data. That's why I use the partial update here. As argument, the `update` method takes a query in PyMongo query format.
+Replace is useful in many cases, but in the current one, I don't know if the `Note` document is in the actual state now.
+Some tags might have been added after the last synchronization with the database. If I replace the document with new
+data, I can easily lose some data. That's why I use the partial update here. As argument, the `update` method takes a
+query in PyMongo query format.
 
 ### Delete
 
@@ -382,11 +407,13 @@ Output:
 
 {% enddetails %}
 
-The `find_all` method tells everything about itself by name only. `find_many` is also simple. It takes PyMongo's query as an argument to filter the documents.
+The `find_all` method tells everything about itself by name only. `find_many` is also simple. It takes PyMongo's query
+as an argument to filter the documents.
 
 ### Aggregations
 
-And finally, I want to show how to create aggregations with Beanie. In this example, I'll calculate how many notes I have per tag name.
+And finally, I want to show how to create aggregations with Beanie. In this example, I'll calculate how many notes I
+have per tag name.
 
 **Independent implementation:**
 
@@ -447,13 +474,20 @@ Output:
 
 {% enddetails %}
 
-In all the examples before aggregation, the result of the `Note` methods were `Note` objects or lists of the `Note`objects. But in the aggregation case, the result can have any structure. To continue work with the python objects I provide parameter `item_model=AggregationResponseItem` to the `aggregate` method and it returns a list of the `AggregationResponseItem` objects.
+In all the examples before aggregation, the result of the `Note` methods were `Note` objects or lists of the `Note`
+objects. But in the aggregation case, the result can have any structure. To continue work with the python objects I
+provide parameter `item_model=AggregationResponseItem` to the `aggregate` method and it returns a list of
+the `AggregationResponseItem` objects.
 
 # Conclusion
 
-Well, the service is done. I've shown how easy it is to do things with Beanie. You can stop thinking about parsing and validating database data and just focus on your project. Certainly, I didn't use all the possible functions. You can find the whole list of methods in the project description [here](https://github.com/roman-right/beanie)
+Well, the service is done. I've shown how easy it is to do things with Beanie. You can stop thinking about parsing and
+validating database data and just focus on your project. Certainly, I didn't use all the possible functions. You can
+find the whole list of methods in the project description [here](https://github.com/roman-right/beanie)
 
-Beanie has become a very important part of my development toolset. Especially when it comes to building prototypes. And I'm happy to share it with the community. I continue to use it in my projects - which means I continue to develop it. The next big thing I want to implement is structure and data migrations.
+Beanie has become a very important part of my development toolset. Especially when it comes to building prototypes. And
+I'm happy to share it with the community. I continue to use it in my projects - which means I continue to develop it.
+The next big thing I want to implement is structure and data migrations.
 
 You are always welcome to participate in the development :-) Thank you very much for your time!
 

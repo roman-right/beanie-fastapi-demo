@@ -28,7 +28,7 @@ async def app_init():
     )
 
     # INIT BEANIE
-    init_beanie(client.beanie_db, document_models=[Note])
+    await init_beanie(client.beanie_db, document_models=[Note])
 
     # ADD ROUTES
     app.include_router(notes_router, prefix="/v1", tags=["notes"])
