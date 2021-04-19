@@ -1,5 +1,5 @@
 import motor
-from beanie.general import init_beanie
+from beanie import init_beanie
 from fastapi import FastAPI
 from pydantic import BaseSettings
 
@@ -24,7 +24,7 @@ class Settings(BaseSettings):
 async def app_init():
     # CREATE MOTOR CLIENT
     client = motor.motor_asyncio.AsyncIOMotorClient(
-        Settings().mongo_dsn, serverSelectionTimeoutMS=100
+        Settings().mongo_dsn
     )
 
     # INIT BEANIE

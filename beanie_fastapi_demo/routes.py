@@ -1,6 +1,6 @@
 from typing import List
 
-from beanie.fields import PydanticObjectId
+from beanie import PydanticObjectId
 from fastapi import APIRouter, HTTPException, Depends
 
 from models import Note, Tag, AggregationResponseItem, StatusModel, Statuses
