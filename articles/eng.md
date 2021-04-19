@@ -70,7 +70,7 @@ Now I will create the database connection and Beanie initialization:
 
 ```python
 import motor.motor_asyncio
-from beanie.general import init_beanie
+from beanie import init_beanie
 
 
 async def main():
@@ -173,7 +173,7 @@ note = await Note.get(note_id)
 **Inside the endpoint:**
 
 ```python
-from beanie.fields import PydanticObjectId
+from beanie import PydanticObjectId
 
 
 # Helper method to get instances
