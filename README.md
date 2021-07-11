@@ -1,3 +1,9 @@
+## Warning
+
+This example project is outdated. I'm working on updating it. 
+
+For now please follow the Beanie documentation: https://roman-right.github.io/beanie/
+
 # Install App
 
 ```shell
