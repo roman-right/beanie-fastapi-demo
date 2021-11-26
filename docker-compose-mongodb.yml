@@ -4,6 +4,7 @@ services:
   mongodb_container:
     image: bitnami/mongodb:latest
     environment:
+      MONGODB_ROOT_PASSWORD: beanie
       MONGODB_USERNAME: beanie
       MONGODB_PASSWORD: beanie
       MONGODB_DATABASE: beanie_db
