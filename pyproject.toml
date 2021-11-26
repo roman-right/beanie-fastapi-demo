@@ -13,6 +13,9 @@ uvicorn = "^0.15.0"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 
+[tool.poetry.scripts]
+beanie-fastapi-demo = 'beanie_fastapi_demo.main:run'
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

@@ -32,8 +32,7 @@ docker-compose -f docker-compose-mongodb.yml up -d
 
 To activate the environment managed by poetry and run the application, run
 ```shell
-poetry shell
-python3 beanie-fastapi-demo/main.py
+poetry run beanie-fastapi-demo
 ```
 The demo application can now be reached on http://127.0.0.1:10001/
 

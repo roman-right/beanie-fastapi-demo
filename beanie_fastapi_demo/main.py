@@ -32,6 +32,9 @@ async def app_init():
     app.include_router(note_router, prefix="/v1")
 
 
-if __name__ == "__main__":
+def run():
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=10001)
+
+if __name__ == "__main__":
+    run()

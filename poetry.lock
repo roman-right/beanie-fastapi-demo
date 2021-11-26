@@ -19,7 +19,7 @@ trio = ["trio (>=0.16)"]
 name = "asgiref"
 version = "3.4.1"
 description = "ASGI specs, helper code, and adapters"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -101,7 +101,7 @@ test = ["pytest (>=6.2.4,<7.0.0)", "pytest-cov (>=2.12.0,<4.0.0)", "mypy (==0.91
 name = "h11"
 version = "0.12.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -281,7 +281,7 @@ python-versions = ">=3.6"
 name = "uvicorn"
 version = "0.15.0"
 description = "The lightning-fast ASGI server."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -308,7 +308,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "770bc90c706a29ce285aee275abe75423540248c425ffa4a3ae50f68710b75f5"
+content-hash = "4a8b05444d608406acfd5ee64b51056966b334247d058101326746ee668c3a77"
 
 [metadata.files]
 anyio = [
