@@ -8,10 +8,10 @@ authors = ["Roman <roman.korolev@teraki.com>"]
 python = "^3.8"
 fastapi = "^0.70.0"
 beanie = "^1.7.2"
+uvicorn = "^0.15.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
-uvicorn = "^0.15.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
