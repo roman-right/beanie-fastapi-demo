@@ -3,9 +3,9 @@ from typing import List
 from beanie import PydanticObjectId
 from fastapi import APIRouter, HTTPException, Depends
 
-from models import Note, Tag, AggregationResponseItem, StatusModel, Statuses
+from beanie_fastapi_demo.models.note import Note, Tag, AggregationResponseItem, StatusModel, Statuses
 
-notes_router = APIRouter()
+router = APIRouter(prefix="/notes", tags=["note"])
 
 
 async def get_note(note_id: PydanticObjectId) -> Note:
@@ -15,46 +15,40 @@ async def get_note(note_id: PydanticObjectId) -> Note:
     return note
 
 
-# CRUD
-
-@notes_router.post("/notes/", response_model=Note)
+@router.post("/", response_model=Note)
 async def create_note(note: Note):
     await note.create()
     return note
 
 
-@notes_router.get("/notes/{note_id}", response_model=Note)
+@router.get("/{note_id}", response_model=Note)
 async def get_note_by_id(note: Note = Depends(get_note)):
     return note
 
 
-@notes_router.put("/notes/{note_id}/add_tag", response_model=Note)
+@router.put("/{note_id}/add_tag", response_model=Note)
 async def add_tag(tag: Tag, note: Note = Depends(get_note)):
     await note.update(update_query={"$push": {"tag_list": tag.dict()}})
     return note
 
 
-@notes_router.delete("/notes/{note_id}", response_model=StatusModel)
+@router.delete("/{note_id}", response_model=StatusModel)
 async def get_note_by_id(note: Note = Depends(get_note)):
     await note.delete()
     return StatusModel(status=Statuses.DELETED)
 
 
-# LISTS
-
-@notes_router.get("/notes/", response_model=List[Note])
+@router.get("/", response_model=List[Note])
 async def get_all_notes():
     return await Note.find_all().to_list()
 
 
-@notes_router.get("/notes/by_tag/{tag_name}", response_model=List[Note])
+@router.get("/by_tag/{tag_name}", response_model=List[Note])
 async def filter_notes_by_tag(tag_name: str):
     return await Note.find_many({"tag_list.name": tag_name}).to_list()
 
 
-# AGGREGATIONS
-
-@notes_router.get("/notes/aggregate/by_tag_name", response_model=List[AggregationResponseItem])
+@router.get("/aggregate/by_tag_name", response_model=List[AggregationResponseItem])
 async def filter_notes_by_tag_name():
     return await Note.aggregate(
         aggregation_query=[
@@ -65,7 +59,7 @@ async def filter_notes_by_tag_name():
     ).to_list()
 
 
-@notes_router.get("/notes/aggregate/by_tag_color", response_model=List[AggregationResponseItem])
+@router.get("/aggregate/by_tag_color", response_model=List[AggregationResponseItem])
 async def filter_notes_by_tag_color():
     return await Note.aggregate(
         aggregation_query=[
